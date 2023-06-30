@@ -1,0 +1,71 @@
+﻿@using WebApp_MVC.Models
+@model List<WebApp_MVC.Employee>
+
+@{
+    ViewBag.Title = "Index";
+}
+@if (TempData.ContainsKey(EnumMessage.ErrorMessage.ToString()))
+{
+    <div class="alert alert-danger">
+        @TempData[EnumMessage.ErrorMessage.ToString()]
+    </div>
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.Partial("Create", new Employee())
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model[0].Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].Age)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].Birthday)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            @Html.Hidden("PK", item.PK)
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Age)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Birthday)
+            </td>
+            <td>
+                <div style="display: inline-block;">
+                    @Html.ActionLink("Edit", "Edit", new { id = item.PK }) |
+                </div>
+                <div style="display: inline-block;">
+                    <form id="deleteEmployeeForm" action="@Url.Action("Delete", "Employee")" method="post">
+                        <input type="hidden" name="id" value="@item.PK" />
+                        <input type="submit" value="Delete" onclick="confirmDelete(event)" />
+                    </form>
+                </div>
+            </td>
+        </tr>
+    }
+
+</table>
+
+<script>
+    function confirmDelete(event) {
+        event.preventDefault();
+        var confirmResult = confirm("確定刪除?");
+        if (confirmResult) {
+            document.getElementById("deleteEmployeeForm").submit();
+        } else {
+        }
+    }
+</script>
